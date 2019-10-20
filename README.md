@@ -1,4 +1,4 @@
-# Estadistica2019
+# Estadística2019
 
 Este repositorio esta dedicado al laboratorio práctico de la asignatura Estadística de la escuela de Biología - Universidad Industrial de Santander.
 
