@@ -1,0 +1,498 @@
+---
+title: "Semana3_Descriptores&Medidas"
+author: "Vra"
+date: "October 3, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Objetivos
+Distinguir entre parámetro y estadístico
+
+Estimar diferentes medidas descriptivas como tendencia central, forma, apuntamiento y asociación.
+
+
+\
+
+## Parámetro vs Estadístico
+
+La estadística nos permite entender las características de una población completa, las características de dicha población son definidas como *Parámetros*. Dado que censar una población no siempre resulta fácil, en biología (y en general) acudimos a la *muestra*, la cual debe respresentar la población general. La estimación de un parámetro poblacional sobre una muestra se llama *Estadístico*. 
+Generalmente, lo que nosotros obtenemos de la naturaleza son muestras que procuramos sean representativas de la población para poder estimar estadísticos que permitan inferir el parámetro poblacional.
+
+![](Files/Parametro.png){width=400px} 
+\
+La distribución de frecuencias nos podría mostrar mas o menos como están distribuidos los datos de nuestras muestras, sin embargo, existen otras medidas que describen con mayor precisión lo que vemos en nuestros gráficos de frecuencias. A estos los llamamos como *Estadísticos descriptivos*
+Estos descriptivos son conocidos como Medidas de tendencia central, de forma, de apuntamiento y de dispersión.
+
+![](Files/Screenshot from 2019-10-07 11-04-18.png){width=400px} 
+
+\
+
+## Medidas de tendencia central
+
+Estiman en dónde, un conjunto de datos numéricos, se están agrupando. Cuando hablamos de la estatura de las mujeres colombianas, podemos decir qué si muestreamos 200 mujeres, vamos a tener valores más cercanos a 1.60 metros que valores sobre 1.80 m. Adicionalmente podemos ver qué muchos de estos valores cercanos a 1.60 se repiten. Estos valores estimados son conocidos cómo media, mediana y moda.
+
+### Media o promedio
+Busca el 'punto de balance'. La *Media aritmética* es la más conocida y usada, sin embargo existen otras como la media geométrica o la media armónica.
+
+La media aritmética o promedio es el sumatorio de todos los datos, divididos en el número total de datos colectados.
+
+Paso 1. Sumatorio
+$$\sum_{n=1}^{n} n^2   \mathbf{X} =  x_{1}, x_{2}, \dots, x_{n}$$
+
+```{r data, include=T}
+data(iris)
+
+iris
+
+# Sumatorio de las longitud del pétalo de la especie setosa
+pl.Setosa <- sum(iris$Petal.Length[which(iris$Species=='setosa')])
+
+pl.Setosa
+```
+
+Paso 2. Dividir el total del sumatorio en el número de muestras nos dará el promedio aritmético
+
+$$\overline{x} =  \sum_{n=1}^{n}=  \frac{\mathbf{X}}{n}$$
+
+
+```{r n, include=T}
+#  ¿Cuál es la longitud de la muestra?
+
+dim(iris)
+
+length(iris)
+
+nrow(iris)
+
+length(iris$Petal.Length)
+
+length(iris$Petal.Length[which(iris$Species=='setosa')])
+
+
+# n de nuestra pregunta
+n<-length(iris$Petal.Length[which(iris$Species=='setosa')])
+
+n
+
+# média aritmética 
+promedio<- pl.Setosa/n
+
+promedio
+
+```
+
+
+
+Este proceso se puede convertir en una función que, computacionalmente hablando, va hacer que el proceso sea un poco más rápido.
+
+
+```{r meanMia, include=T}
+
+mi.promedio <- function(x) {
+  
+  mi.suma<- sum(x)
+  mi.n<-length(x)
+  mi.prom <- mi.suma/mi.n
+  return(mi.prom)
+}
+
+mi.promedio(x= iris$Petal.Length[which(iris$Species=='setosa')])
+
+
+```
+
+
+Aunque se podría hacer 'a mano', existen funciones que permiten hacer la mayoría de las estimaciones. En este caso todos este proceso puede ser omitido y simplemente usar la función *mean()*
+
+```{r mean, include=T}
+mean(iris$Petal.Length[which(iris$Species=='setosa')])
+
+hist(iris$Petal.Length[which(iris$Species=='setosa')])
+```
+
+**Ejer:** Si la columna iris$Petal.Length tuviera valores 'NA', ¿Cómo podría eliminarlos antes de hacer la estimación de la media?
+
+\
+
+Estime la media aritmética de la altura, la longitud y el ancho del caparazón de las tortugas pintadas [data(tortues), paquete: *ade4*], use la función apply para obtener los estadísticos de cada medida en un mismo vector.
+
+\
+
+## Otras medias
+Existen otras formas de estimar la media; estas son útiles cuando la media aritmética no es una estimador apropiado.
+
+### Media armónica
+
+$$H = \frac{n}{\frac{1}{x_1} + \frac{1}{x_2} + \cdots + \frac{1}{x_n}} = \frac{n}{\sum_{i=1}^n \frac{1}{x_i}}, \qquad x_i > 0 \text{ for all } i.$$
+
+```{r func, include=T}
+
+library(psych)
+
+# Média armónica
+
+harmonic.mean(iris$Petal.Length[which(iris$Species=='setosa')])
+
+```
+
+
+### Média geométrica
+
+$$\overline{a}_{geom}=\bigg(\prod_{i=1}^n a_i \bigg)^{1/n} = \sqrt[n]{a_1 \cdot a_2 \cdots a_n}$$
+
+
+```{r mean3, include=T}
+
+# Média geométrica
+
+geometric.mean(iris$Petal.Length[which(iris$Species=='setosa')])
+
+```
+
+## Mediana
+
+La mediana permite dividir la distribución de frecuencias en dos mitades. Si organizamos los valores de menor a mayor. Es la magnitud media o el promedio de los valores medios en un vector ordenado.
+
+```{r median, include=T}
+
+# Voy a escribir mis datos de trabajos en un objeto llamado setosa
+
+setosa <- iris$Petal.Length[which(iris$Species=='setosa')]
+
+# Ordenar
+
+sort(setosa)
+
+# longitud de setosa
+n
+
+# Mediana Es el punto medio del vector
+
+median(setosa)
+
+```
+
+**Ejer:** Genere una función propia que le permita encontrar la mediana, tal y como lo hizo con la media aritmética.
+
+## Modo
+
+
+El modo o la moda es el valor que más se repite en mi muestra. A diferencia de la media y la mediana, la moda se puede aplicar a variables cuantitativas y cualitativas.
+
+```{r mode, include=T}
+
+# moda estadística?
+mode(setosa)
+
+# en este punto hay que generar la función
+
+freq <- table(setosa)
+freq
+
+freq[which.max(freq)]
+```
+
+**Ejer:** Genere una función propia que le permita calcular la moda
+
+
+Estas medidas de tendencia central podemos verlas sobre la distribución de frecuencias de frecuencia de las longitudes de pétalos de la especie Setosa.
+
+
+```{r plot, include=T}
+# Rango = x
+range(setosa)
+
+# Freq = y
+min(freq)
+max(freq)
+
+# distribución de frecuencias de setosa
+hist(setosa, # histogram
+ col = "peachpuff", # column color
+ border = "black", 
+ prob = TRUE, # show densities instead of frequencies
+ xlim = c(0.5,2.5),
+ xlab = "Longitud de pétalo",
+ main = "Frecuencias de longitud de pétalo de setosa")
+lines(density(setosa),
+      lwd = 2, # thickness of line
+ col = "chocolate3") # Generar la distribución continua distribución de masa a partir de los datos observados
+
+# Graficar la media
+abline(v = mean(setosa),
+ col = "royalblue",
+ lwd = 2)
+
+abline(v = median(setosa),
+ col = "red",
+ lwd = 2)
+
+legend(x = "topright", # location of legend within plot area
+ c("Density plot", "Mean", "Median"),
+ col = c("chocolate3", "royalblue", "red"),
+ lwd = c(2, 2, 2))
+
+```
+
+**Ejer:** Después de generar la función del cálculo de moda, grafíquela sobre el histograma.
+
+## Medidas de Posición
+
+Pensemos un momento en cómo nuestros valores crudos están distribuidos. Podríamos ranquearlos, por ejemplo, dividiendo el tango general *range(setosa)* en 4 cajas. Es decir 1/4, 2/4, 3/4 de la distribución.  En una distribución de probabilidad, un *Cuant+il* va a marcar la proporción (%) de valores de la población menores o igual qué. 'Esto es un intervalo de distribución en una variable aleatoria en el cuál nuestra medida cae!'.
+
+![](Files/cuantil.png){width=400px} 
+
+```{r densi, include=T}
+
+# moda estadística?
+density(setosa)
+
+# Cuantíl
+
+quantile(setosa)
+
+# Longitudes menores o iguales al 80%
+quantile(setosa,probs = 0.8)
+
+```
+
+Un cuartíl estaría determinado en términos de cuartos, un percentíl estaría expresado en términos de 0 a 100.
+ 
+```{r percent, include=T}
+
+# Cuartíl
+quantile(setosa,probs = c(seq(0, 1, 0.25)))
+
+```
+**Ejer:** Genere los cuantiles en intervalos de 0.5
+Existen otras funciones que nos permiten generar cuartiles, incluyendo información de tendencias centrales. Es decir, *density()* pero más resumido.
+
+```{r percent2, include=T}
+
+# summary
+summary(setosa)
+
+# Lo interesante no es summary, es cómo estraer información de acá y poderlo graficar
+
+str(summary(setosa))
+x <- summary(setosa)
+class(x)
+# Obtener minimo 
+x[1]
+```
+
+```{r plot2, include=T}
+# distribución de frecuencias de setosa
+hist(setosa, # histogram
+ col = "grey80", # column color
+ border = "black", 
+ prob = TRUE, # show densities instead of frequencies
+ xlim = c(0.5,2.5),
+ xlab = "Longitud de pétalo",
+ main = "Frecuencias de longitud de pétalo de setosa")
+lines(density(setosa),
+      lwd = 2, # thickness of line
+ col = "chocolate3") # Generar la distribución continua distribución de masa a partir de los datos observados
+
+# Graficar la media
+
+abline(v = x[2],
+ col = "red1",
+ lwd = 2)
+
+abline(v = x[3],
+ col = "red4",
+ lwd = 2)
+
+abline(v = x[4],
+ col = "blue",
+ lwd = 2)
+
+abline(v = x[5],
+ col = "red1",
+ lwd = 2)
+
+legend(x = "topright", # location of legend within plot area
+ c("Density plot","1st Qu", "Mean", "Median","3st Qu" ),
+ col = c("chocolate3", "royalblue", "red"),
+ lwd = c(2, 2, 2))
+```
+
+Para más información sobre nombre de colores [ver][1]
+[1]:http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
+
+Si revisamos *iris*, este data.frame contiene la información de tres especies distintas. hasta el momento todo lo hemos hecho con la especie *Setosa*. La función aggregate () nor permite asignar una operación sobre los niveles de una variable. Así, podríamos obtener,po rjemplo, la media de cada variable por cada nivel (en este caso el nivel sería las especies).
+
+```{r agg1, include=T}
+
+# aggregate()
+
+aggregate(iris[,1:4], list(Especies = iris$Species), mean)
+
+```
+**Ejer:** ¿Qué sucede si el número de columnas deseado no se especifica? Obtenga la mediana, la moda y los cuantiles para cada especie de iris y para cada variable morfométrica.
+
+![](Files/boxplot.png){width=400px}
+
+## Medidas de Dispersión
+
+Las medidas de tendencia central nos permite ver en donde está más concentrada la masa de los datos, pero estas no permiten ver qué tan dispersos están los datos. Imaginemos dos poblaciones de pájaros de la misma especies, donde nos interesa saber la longitud de la cola en cm.
+
+
+
+```{r agg, include=T}
+
+# voy a campo y mido dos poblaciones de pájaros
+pop1 <-abs(rnorm(200,mean = 6,sd = 1))
+
+pop2 <-abs(rnorm(200,mean = 6,sd = 5))
+
+
+pops<-cbind(pop1,pop2)
+pops
+
+summary(pops)
+
+boxplot(x = pops,notch=T)
+
+```
+
+
+
+
+Para ver cómo graficar de una forma estética puede ir a: [Galería de gráficas en R][2] o [Gráficas simples en plot][3]
+[2]:https://www.r-graph-gallery.com/
+[3]:https://www.statmethods.net/graphs/index.html
+
+### Varianza y Desviación
+
+la varianza mide el grado de dispersión de las observaciones alrededor de la media aritmética y la desviación estándar es simplemente la raíz cuadrada de la varianza
+
+**Varianza**
+$$s_{p}^2 = \frac {(x_{1} - \overline{x} ) + (x_{2} - \overline{x}) + ... +(x_{n} - \overline{x})}{n-1}$$
+
+**DS**
+
+$$SD= \sqrt s_{p}^2$$
+
+interpretado como el promedio de la distancia de los datos a la media aritmética.
+
+
+```{r sd, include=T}
+
+# Varianza
+apply(pops,2,var)
+
+# SD
+
+apply(pops,2,sd)
+
+plot(density(pops[,1]))
+
+plot(density(pops[,2]))
+
+```
+
+**Ejer:** grafique la distribución de frecuencias de cada población usando histograma y densidad en el mismo gráfico. Adiciones la media, la mediana y la moda.
+
+Estos estadísticos descriptivos pueden ser resumidos en una tabla usando la función describe(). Para más información podemos ir a ayuda para poder ver los parámetros de la función.
+
+```{r drecip, include=T}
+# Para las dos columnas qué representan poblaciones
+describe(pops)
+
+```
+
+
+## Medidas de forma
+
+Imaginemos que los datos de iris son de una sola especies, si graficáramos esos datos en n solo conjunto veríamos algo así:
+
+
+```{r for, include=T}
+# Podemos ver lo msmo para niveles internos
+
+for (i in 1:4){
+  
+  plot(density(iris[,i]), main = colnames(iris)[i])
+}
+
+```
+Distribuciones que no tienen una simetría como tal.
+
+
+
+### Asimetría
+
+La asimetría se puede encontrar como el tercer momento estándar (1: media, 2: mediana). Nos muestra el signo de las desviaciones con respecto a la media.
+
+Para ello se puede calcular el *coheficiente de asimetría de Fisher* (Y). Si y = 0 la distribución es simétrica, si Y es > 0 la distribución es positiva  o a la derecha y si Y es < 0 la distribución es negativa  o a la izquierda.
+
+    
+
+```{r sk, include=T}
+# Cálculo
+library(EnvStats)
+
+skewness(pops[,1], na.rm = FALSE, method = "fisher")
+
+plot(density(pops[,1]), main= 'Pop1')
+abline(v= mean(pops[,1]))
+
+skewness(pops[,2], na.rm = FALSE, method = "fisher")
+
+plot(density(pops[,2]), main= 'Pop3')
+abline(v= mean(pops[,2]))
+
+aggregate(iris[,1:4],list(Especies= iris$Species), skewness, na.rm = FALSE, method = "fisher")
+
+set.seed(999)
+n.sample <- rnorm(n = 10000, mean = 55, sd = 4.5)
+
+skewness(n.sample, na.rm = FALSE, method = "fisher")
+plot(density(n.sample), main= 'Pop3')
+abline(v= mean(n.sample))
+
+```
+
+### Medidas de Apuntamiento
+
+### Curtosis
+
+Es una medida de cuan apretados estas los datos al rededor de la media; se podría decir que es una característica de forma. No está relacionada directamente con la varianza. 
+
+Se puede clasificar en 3:
+
+leptocúrtica: cuando el índice es positivo,  implica que la distribución tiene 'colas gordas'
+
+platicúrtica: Cuando el índice es negativo, implica que la distribución tiene 'colas delgadas'
+
+mesocúrtica: Cuando el índice dice que es 0, implica que tiene colas estándar como la distribución normal
+
+![](Files/forma&apuntamiento.jpg){width=400px} 
+
+
+```{r kur, include=T}
+
+apply(pops,2,kurtosis)
+
+kurtosi(iris$Sepal.Length[which(iris$Species == 'setosa')])
+
+kurtosi(n.sample)
+
+# Podemos ver lo mismo que describe(), pero para niveles internos
+
+describe.by(iris[,1:4],group = iris$Species)
+
+```
+
+
+
+
+**Ejer:** Lea el resumen y las gráficas del articulo de Magund 2007. Cargue los datos llamados '2007_EAA_Magud_et_al_data.csv' usando la función read.csv(). Estime todos los estadísticos vistos en esta práctica para las variables 'body length', 'tubercles 1b apart' y 'tarsus I length'.
+Grafique sus análisis y exportelos usando las funciones PNG o PDF. Escriba un párrafo de no más de 200 analizando lo que encontró. Tenga en cuenta que solo describir las salidas implica descripción de resultados no análisis.
+
