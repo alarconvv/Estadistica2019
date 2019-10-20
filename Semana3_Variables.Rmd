@@ -1,0 +1,541 @@
+---
+title: "Semana 3 - Variables y Frecuencias"
+author: "Vra"
+date: "September 30, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Objetivos
+
+Describir los tipos de variables más utilizados en estudios biológicos
+
+Generar la distribución de frecuencias de cada tipo de variable
+
+## Estadística como Ciencias
+
+
+Es una disciplina de la matemática que permite obtener, ordenar, analizar y sacar conclusiones de comportamientos o fenómenos observables en la naturaleza. Este campo de las ciencias se puede dividir en 3 tipos: Descriptiva, Inferencial y Probabilistica.
+
+No importa el tipo de estadística que usted haga una cosa si es clara:
+
+![](Files/mmeinicial.png){width=400px} 
+
+
+Estadística como asignatura pretende dar a los estudiantes herramientas que le permitan es coger un determinado test de análisis y entender el por qué de su elección.
+
+![](Files/PlotTree.jpg){width=700px} 
+[Fuente][1]
+
+[1]:https://www.glabstat.com/test?fbclid=IwAR3l6CU71Ovj1c9cbqzfZvhu0gqSl8UhLq7R0B_RwKrkiEIixZWOmIAfvhY
+
+Pero también, que el estudiante pueda graficar sus resultados de una forma coherente a sus datos y estética.
+
+
+![](Files/gallery.png)
+[Fuente][2]
+
+
+[2]:https://github.com/ft-interactive/chart-doctor/tree/master/visual-vocabulary?fbclid=IwAR2LvcRDnl3aR-cZ1zzMtdU3Gyfe7jja4CO2D-NZhI-trIYAOj5dWt_5uoU
+
+
+# Para empezar ...
+
+
+Diferentes tipos de datos (observaciones) pueden ser tomados desde la naturaleza, como medidas, conteos, caracteres, rasgos, entre otras. Cuando un conjunto de datos de un mismo tipo y que podría variar, en función de algo, de población a población, se le denomina variable.
+
+Estas variables se dividen según la naturaleza de los datos:
+
+![](Files/variables.jpg)
+
+A esta clarificación podemos agregar un tipo adicional denominado derivadas (Ver: Sokal & Rohlf 1995), las cuales son computadas a partir de dos o más variables medidas de manera independiente. Dentro de estas podemos encontrar razones, porcentajes, tasas e índices.
+
+
+## Variables en R
+
+Los paquetes en R ofrecen una gran variedad de conjuntos de datos, para acceder a ellos podemos utilizar la función *data*
+
+\
+
+```{r data, echo=TRUE}
+# Ver los set de datos para los paquetes cargado actualmente
+
+data()
+
+# Ver los set de datos para todos los paquetes instalados
+
+data(package = .packages(all.available = TRUE))
+```
+
+\
+
+Para poder acceder a algunos datos que usaremos el resto de prácticas debemos primero instalar/cargar algunos paquetes.
+
+\
+
+```{r paquetes, echo=TRUE}
+library(ape)
+library(permute)
+library(vegan)
+library(ade4)
+library(geiger)
+```
+
+\
+
+Algunas tablas de datos que vienen por defecto en estos paquetes:
+
+\
+
+```{r dataset, echo=TRUE}
+# Paquete ape
+data(carnivora)
+
+#Paquete permute
+data(jackal)
+
+#Paquete vegan
+data(jackal)
+
+data(BCI)
+
+data(mite.env)
+
+#Paquete ade4
+data(atlas)
+
+data(carniherbi49)
+
+data(corvus)
+
+data(tortues)
+
+#Paquete geiger
+data(geospiza)
+
+```
+
+\
+
+
+\
+Si no logra descargar los paquetes con éxito, yo descargué cada set de datos y los guardé en objetos .RData. usted solo debe cargarlos usando la funcion load(). Usted podrá ver los datos en la parte derecha superior como varibales.
+```{r dataset2, echo=TRUE}
+# Paquete ape
+# data(carnivora)
+#save(carnivora,file = 'Files/carnivora.RData')
+#load('Files/carnivora.RData')
+
+#Paquete permute
+# data(jackal)
+#save(jackal, file = 'Files/jackal.RData')
+#load('Files/jackal.RData')
+
+#Paquete vegan
+
+# data(BCI)
+# save(BCI, file = 'Files/BCI.RData')
+#load('Files/BCI.RData')
+
+# data(mite.env)
+# save(mite.env, file = 'Files/mite.env.RData')
+#load('Files/mite.env.RData')
+
+#Paquete ade4
+# data(atlas)
+#save(atlas, file = 'Files/atlas.RData')
+#load('Files/atlas.RData')
+
+# data(corvus)
+# save(corvus, file = 'Files/corvus.RData')
+#load('Files/corvus.RData')
+
+# data(tortues)
+#  save(tortues, file = 'Files/tortues.RData')
+# load('Files/tortues.RData')
+
+#Paquete geiger
+# data(geospiza)
+#  save(geospiza, file = 'Files/geospiza.RData')
+# load('Files/geospiza.RData')
+
+```
+
+**Ejer:** ¿Que clase de objeto es BIC? ¿Qué clase de objeto es geospiza? use la función *str* para obtener información sobre la estructura.
+
+
+Los objetos tipo *list*, son objeto que contienen diferentes tipos y clases de objetos dentro. Por ejemplo geospiza contiene 4 objetos internos, el primero es un árbol filogenético, el segundo es  un data.frame, el tercero es un árbol filgenético y el último un data.frame.
+
+
+
+\
+
+```{r geospiza, echo=TRUE}
+# Clase
+class(geospiza)
+
+
+#Estrúctura
+
+str(geospiza)
+
+# ¿Qué es geospiza?
+
+help("geospiza")
+
+```
+
+\
+
+Recuerda ¿qué se dijo sobre objetos S3?, este tipo de listas se navegan igual que un data.frame.
+
+
+\
+
+```{r lista, echo=TRUE}
+# Para acceder al segundo objeto solo hay que mirar la estructura
+
+geospiza$geospiza.data
+
+# Para extraer un objeto dentro de esta tabla solo hay que asignar la posición
+
+geospiza$geospiza.data[,1]
+
+```
+
+\
+
+**Ejer:** ¿Qué tipo de variable es tarsusL y qué clase? 
+Abra el objeto *tortues* y mire ¿Qué tipo de variables tiene y qué clase son?, haga lo mismo con el objeto *mite.env* y revise ¿Qué tipo de variable es *shurb* y qué clase es? Recuerde siempre usar help para saber de donde vienen los datos.
+
+\
+
+Podemos generar variables computadas a partir de variables medidas independientemente. Por ejemplo, mirar la proporción de sexos de un muestreo.
+
+\
+
+```{r sexos, echo=TRUE}
+# Semilla
+set.seed(1)
+
+#sexos
+sex <- c('F', 'M')
+
+sex
+
+# Inventemos una muestra con las mismas probabilidades de sacar un Macho o una Hembra
+
+pop1 <- sample(x = sex, size = 50,replace = T,prob = c(0.5,0.5))
+
+pop1 
+
+# imaginemos que pop1 es real y queremos saber cuál es la razón de sexos en la muestra
+
+M <- length(which(pop1 == 'M'))
+
+M
+
+F <- length(which(pop1 == 'F'))
+
+F
+
+# la razón es
+paste(F,'/',M,sep = '')
+
+# 0
+
+F/M
+
+```
+
+\
+
+Qué pasaría si en el sitio encontráramos más hembras qué machos.
+
+
+\
+
+```{r sexos2, echo=TRUE}
+# Semilla
+set.seed(1)
+
+#sexos
+sex <- c('F', 'M')
+
+sex
+
+# Inventemos una muestra con las mismas probabilidades de sacar un Macho o una Hembra
+
+pop2 <- sample(x = sex, size = 50,replace = T,prob = c(0.8,0.2))
+
+pop2
+
+# imaginemos que pop1 es real y queremos saber cuál es la razón de sexos en la muestra
+
+M <- length(which(pop1 == 'M'))
+
+M
+
+F <- length(which(pop1 == 'F'))
+
+F
+
+# la razón es
+paste(F,'/',M,sep = '')
+
+# 0
+
+F/M
+
+```
+
+\
+
+**Ejer:** usando el data.frame *tortues* calcule la proporción de hembras y machos de la muestra
+
+\
+
+También podemos generar la proporción entre dos medidas, por ejemplo el ancho y el largo para obtener una variable derivada que represente la forma.
+
+\
+
+```{r prp, echo=TRUE}
+# Imaginemos que tomamos medidas de cráneos de lagarto
+
+Ancho<-rnorm(n = 32,mean = 10,sd = 1)
+
+Ancho
+
+Largo <- rnorm(n = 32,mean = 15,sd = 1)
+
+Largo
+
+# Construimos la tabla con medidas imaginarias
+medidas<-cbind(Ancho, Largo)
+
+medidas
+
+Tabla_medidas <- as.data.frame(cbind(paste('spp',1:32,sep = '_'),medidas))
+
+# tabla sin colnames
+
+Tabla_medidas
+
+# asigne nombres a las columnas
+
+colnames(Tabla_medidas) <- c('Individuos', 'Ancho','Largo')
+
+Tabla_medidas
+
+# Relación ancho/largo
+
+prp <- Ancho/Largo
+
+prp 
+
+Tabla_medidas_prp <- cbind.data.frame(Tabla_medidas, prp)
+
+Tabla_medidas_prp 
+
+```
+
+\
+
+**Ejer:** usando el data.frame *tortues* calcule la proporción entre el ancho y el largo del caparazón, genere una tabla con la información de *tortues* y la nueva variable derivada.
+
+\
+
+Tenga en cuenta que no todo puede ser expresado en términos de variables derivadas. Generalmente, este tipo de variables tienen más desventajas que ventajas. ( Ver Sokal & Rohlf 1995, cap 2)
+
+## Tablas
+
+Una herramienta útil para ver la frecuencia o el conteo de una variable es la función *table*; adicionalmente, podemos obtener la fracción de cada objeto con relación al total del muestreo.
+
+\
+
+```{r tabla, echo=TRUE}
+# Conteo o frecuencia
+freq<-table(mite.env$Substrate)
+
+freq
+
+# Fracción
+prop.table(freq)
+
+# Las proporciones pueden  ser visualizadas usando la función *pie*
+pie(prop.table(freq))
+
+```
+\
+
+**Ejer:** ¿Cuántas especies de *Corvus* fueron muestreadas en la región Paleártica-Africana? Use el data.frame del género *Corvus*. ¿Qué porcentaje de *Corvus* muestreados habitan zonas abiertas
+
+\
+
+
+
+## Distribución de frecuencias
+
+La distribución de frecuencias es el sumatorio de las ocurrencias de los datos clasificados en categorías no solapadas.
+Cuando las variables son categóricas podemos graficar barras que permitan ver la frecuencia de cada objeto.
+
+
+\
+
+```{r cate, echo=TRUE}
+# Sustrato de Orbatidos
+
+# freq era la tabla de frecuencias construida anteriormente
+freq
+
+mite.env$Substrate
+
+# Gráficar las frecuencias de cada sustrato
+plot(freq)
+
+```
+
+\
+
+**Ejer:** ¿Cómo luce el gráfico de frecuencias para los tipos de hábitat del género *Corvus*?
+
+\
+
+Pero si las variables son cuantitativas, los valores deben ser dispuestos en rangos que permitan observar el comportamiento de las frecuencias.
+
+Primero, debemos generar una tabla de frecuencias
+
+
+\
+
+```{r min, echo=TRUE}
+# Sumar las ocurrencias de cada especie
+atlas$birds
+
+xsp<- apply(atlas$birds,2,sum)
+
+# Preguntar cuál es el mínimo 
+min(xsp)
+
+which.min(xsp)
+
+
+xsp[which.min(xsp)]
+
+# podríamos generar vectores
+
+min(xsp)
+
+x <- which.min(xsp)
+
+
+xsp[x]
+
+
+```
+\
+
+**Ejer:** encuentre el máximo, así como lo hizo para el mínimo
+
+Preguntar cuál es el  el máximo
+
+\
+
+```{r max, echo=F, include=T}
+
+
+max(xsp)
+
+which.max(xsp)
+
+
+xsp[which.max(xsp)]
+
+# poodemos graficar la frecuencia de cada especies
+plot(as.table(xsp))
+
+```
+\
+
+Cuando hablamos de variables de medida como longitud ancho etc, podemos hacer lo mismo pero organizando los valores en rangos.
+
+\
+
+```{r minleng, echo=TRUE}
+# Longitud de las tortugas
+tortues$long
+
+# no tendría sentido, debemos organizar en rangos
+table(tortues$long)
+
+# Preguntar cuál es el mínimo 
+min(tortues$long)
+
+```
+\
+
+```{r maxleng, echo=T}
+
+# Preguntar cuál es el máximo
+max(tortues$long)
+
+
+# La función rangos nos permite ver directamente el rango
+
+range(tortues$long)
+```
+\
+
+Dado que el máximo es 177 y el mínimo es 93, Podríamos decir que nuestra muestra estaría en un rango de 92.5 a 177.5
+
+Podemos crear una lista de rangos a partir de esta información
+
+```{r rangos, echo=T}
+# genere las cajas
+
+bins <- seq(92.5,182.5, 10)
+
+# Agrupe los datos en las cajas
+
+datos<- cut(tortues$long,bins)
+
+# genere la tabla de frecuencias
+freq_long<-table(datos)
+
+# Usamos transfrom para generar un data.frame de frecuencias
+transform(freq_long)
+
+# Podemos usarlo para adicionar más información a cada rango. Freq es una variable interna 
+# generada a partir de transform(freq_long)
+
+transform(freq_long, Relativ= prop.table(Freq), Acum= cumsum(Freq))
+
+```
+\
+
+Para poder visualizar estos datos, nosotros podemos asignar el vector crudo a la función *hist* o utilizar los rangos generados anteriormente.
+
+
+
+\
+
+```{r hist, echo=T}
+
+# Histograma a partir de datos crudos
+
+hist(tortues$long)
+
+# Histograma definiendo las cajas 
+
+hist(tortues$long, breaks = bins, main = 'Longitudes de caparazón')
+```
+\
+
+**Ejer:** Repita el ejercicio para las variables continuas de tamaño de pico y tamaño del ala en el género *Corvus*. Busque cómo cambiar colores, ejes y algunas propiedades que le permitan mejorar el diseño del histograma.
+
+Invente unos datos de medidas, como se hizo en el caso de los cráneos, y genere todo el ejercicio hasta el histograma. Busque otro tipo de distribuciones para generar las variables [ejemplo][3]. Busque en qué casos sirve cada distribución o para qué se usan.
+
+[3]: http://www.rpubs.com/AlexMSalcium/Ejemplos_Chidos
+\
